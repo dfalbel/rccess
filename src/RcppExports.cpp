@@ -16,22 +16,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// get_var_names
-CharacterVector get_var_names(std::string path, std::string table_name);
-RcppExport SEXP _rccess_get_var_names(SEXP pathSEXP, SEXP table_nameSEXP) {
+// get_table_schema
+Rcpp::DataFrame get_table_schema(std::string path, std::string table_name);
+RcppExport SEXP _rccess_get_table_schema(SEXP pathSEXP, SEXP table_nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
     Rcpp::traits::input_parameter< std::string >::type table_name(table_nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_var_names(path, table_name));
+    rcpp_result_gen = Rcpp::wrap(get_table_schema(path, table_name));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rccess_get_table_names", (DL_FUNC) &_rccess_get_table_names, 1},
-    {"_rccess_get_var_names", (DL_FUNC) &_rccess_get_var_names, 2},
+    {"_rccess_get_table_schema", (DL_FUNC) &_rccess_get_table_schema, 2},
     {NULL, NULL, 0}
 };
 

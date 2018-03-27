@@ -11,6 +11,47 @@ inline std::string normalizePath(std::string path) {
   return Rcpp::as<std::string>(normalizePath(path, "/", true));
 };
 
+
+Rcpp::String mdb_col_disp_type(MdbColumn *col)
+{
+  switch (col->col_type) {
+  case MDB_BOOL:
+    return "bool";
+    break;
+  case MDB_BYTE:
+    return "byte";
+    break;
+  case MDB_INT:
+    return "int";
+    break;
+  case MDB_LONGINT:
+    return "longint";
+    break;
+  case MDB_COMPLEX:
+    return "complex";
+    break;
+  case MDB_FLOAT:
+    return "float";
+    break;
+  case MDB_DOUBLE:
+    return "double";
+    break;
+  case MDB_TEXT:
+    return "text";
+    break;
+  case MDB_DATETIME:
+    return "datetime";
+    break;
+  case MDB_MEMO:
+    return "memo";
+    break;
+  case MDB_MONEY:
+    return "money";
+    break;
+  }
+  return NA_STRING;
+}
+
 class Mdb {
 
   std::string path_;
@@ -59,10 +100,11 @@ public:
     return table_names;
   };
 
-  CharacterVector getVarNames(std::string table_name) {
+  Rcpp::DataFrame getTableSchema(std::string table_name) {
 
     MdbCatalogEntry * entry;
-    CharacterVector var_names;
+    CharacterVector col_names;
+    CharacterVector col_types;
 
     for (int i=0; i < this->mdb->num_catalog; i++) {
       entry = static_cast<MdbCatalogEntry*>(g_ptr_array_index (mdb->catalog, i));
@@ -75,7 +117,8 @@ public:
 
         for (int j = 0; j < table->num_cols; j++) {
           col = static_cast<MdbColumn*>(g_ptr_array_index (table->columns, j));
-          var_names.push_back(col->name);
+          col_names.push_back(col->name);
+          col_types.push_back(mdb_col_disp_type(col));
         };
 
         break; // leave loop if find a table with the right name
@@ -87,7 +130,10 @@ public:
 
     };
 
-    return var_names;
+    return Rcpp::DataFrame::create(
+      Named("col_names") = col_names,
+      Named("col_types") = col_types
+      );
   };
 
 };

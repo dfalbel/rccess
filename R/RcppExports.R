@@ -5,7 +5,7 @@ get_table_names <- function(path) {
     .Call(`_rccess_get_table_names`, path)
 }
 
-get_var_names <- function(path, table_name) {
-    .Call(`_rccess_get_var_names`, path, table_name)
+get_table_schema <- function(path, table_name) {
+    .Call(`_rccess_get_table_schema`, path, table_name)
 }
 

@@ -10,8 +10,8 @@ CharacterVector get_table_names(std::string path) {
 };
 
 // [[Rcpp::export]]
-CharacterVector get_var_names (std::string path, std::string table_name) {
+Rcpp::DataFrame get_table_schema (std::string path, std::string table_name) {
   Mdb m(path);
 
-  return m.getVarNames(table_name);
+  return m.getTableSchema(table_name);
 }
