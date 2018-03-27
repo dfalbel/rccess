@@ -11,9 +11,7 @@ inline std::string normalizePath(std::string path) {
   return Rcpp::as<std::string>(normalizePath(path, "/", true));
 };
 
-
-Rcpp::String mdb_col_disp_type(MdbColumn *col)
-{
+Rcpp::String mdb_col_disp_type (MdbColumn *col) {
   switch (col->col_type) {
   case MDB_BOOL:
     return "bool";
@@ -50,6 +48,21 @@ Rcpp::String mdb_col_disp_type(MdbColumn *col)
     break;
   }
   return NA_STRING;
+}
+
+MdbTableDef *read_table_by_name (MdbHandle *mdb, std::string table_name, int obj_type) {
+  unsigned int i;
+  MdbCatalogEntry *entry;
+
+  mdb_read_catalog(mdb, obj_type);
+
+  for (i=0; i<mdb->num_catalog; i++) {
+    entry = static_cast<MdbCatalogEntry*>(g_ptr_array_index(mdb->catalog, i));
+    if (entry->object_name == table_name)
+      return mdb_read_table(entry);
+  }
+
+  Rcpp::stop("Didn't find a table with the provided name.");
 }
 
 class Mdb {
@@ -133,9 +146,17 @@ public:
     return Rcpp::DataFrame::create(
       Named("col_names") = col_names,
       Named("col_types") = col_types
-      );
+    );
   };
 
-};
+  Rcpp::DataFrame getTable (std::string table_name) {
 
+    MdbTableDef *table;
+    table = read_table_by_name(this->mdb, table_name, MDB_TABLE);
+
+    return Rcpp::DataFrame::create();
+  };
+
+
+};
 
