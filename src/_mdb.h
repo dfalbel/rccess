@@ -139,6 +139,8 @@ public:
 
     MdbTableDef *table;
     table = read_table_by_name(this->mdb, table_name, MDB_TABLE);
+    mdb_read_columns(table);
+    mdb_rewind_table(table);
 
     return Rcpp::DataFrame::create();
   };
