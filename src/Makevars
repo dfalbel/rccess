@@ -1,0 +1,1 @@
+PKG_CPPFLAGS=-I/usr/local/Cellar/glib/2.56.0/include/glib-2.0 -I/usr/local/Cellar/glib/2.56.0/lib/glib-2.0/include -I/usr/local/opt/gettext/include -I/usr/local/Cellar/pcre/8.41/include -Iunix -I. $(C_VISIBILITY)
