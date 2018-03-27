@@ -1,5 +1,5 @@
 #include <Rcpp.h>
-#include <libmdb/mdbtools.h>
+#include <mdbtools.h>
 using namespace Rcpp;
 
 // copied from
@@ -8,7 +8,7 @@ inline std::string normalizePath(std::string path) {
   Rcpp::Environment baseEnv = Rcpp::Environment::base_env();
   Rcpp::Function normalizePath = baseEnv["normalizePath"];
   return Rcpp::as<std::string>(normalizePath(path, "/", true));
-}
+};
 
 class Mdb {
 
