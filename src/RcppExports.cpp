@@ -5,20 +5,20 @@
 
 using namespace Rcpp;
 
-// get_num_catalogs
-IntegerVector get_num_catalogs(std::string path);
-RcppExport SEXP _rccess_get_num_catalogs(SEXP pathSEXP) {
+// get_table_names
+CharacterVector get_table_names(std::string path);
+RcppExport SEXP _rccess_get_table_names(SEXP pathSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_num_catalogs(path));
+    rcpp_result_gen = Rcpp::wrap(get_table_names(path));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rccess_get_num_catalogs", (DL_FUNC) &_rccess_get_num_catalogs, 1},
+    {"_rccess_get_table_names", (DL_FUNC) &_rccess_get_table_names, 1},
     {NULL, NULL, 0}
 };
 
