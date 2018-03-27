@@ -66,16 +66,25 @@ public:
 
     for (int i=0; i < this->mdb->num_catalog; i++) {
       entry = static_cast<MdbCatalogEntry*>(g_ptr_array_index (mdb->catalog, i));
+
       if (entry->object_name == table_name) {
+
         MdbTableDef *table = mdb_read_table (entry);
         mdb_read_columns (table);
         MdbColumn *col;
 
-        for (i = 0; i < table->num_cols; i++) {
-          col = static_cast<MdbColumn*>(g_ptr_array_index (table->columns, i));
+        for (int j = 0; j < table->num_cols; j++) {
+          col = static_cast<MdbColumn*>(g_ptr_array_index (table->columns, j));
           var_names.push_back(col->name);
         };
+
+        break; // leave loop if find a table with the right name
       };
+
+      if (i == this->mdb->num_catalog - 1) {
+        Rcpp::stop("Didn't found table with the provided name.");
+      };
+
     };
 
     return var_names;
