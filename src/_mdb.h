@@ -59,6 +59,28 @@ public:
     return table_names;
   };
 
+  CharacterVector getVarNames(std::string table_name) {
+
+    MdbCatalogEntry * entry;
+    CharacterVector var_names;
+
+    for (int i=0; i < this->mdb->num_catalog; i++) {
+      entry = static_cast<MdbCatalogEntry*>(g_ptr_array_index (mdb->catalog, i));
+      if (entry->object_name == table_name) {
+        MdbTableDef *table = mdb_read_table (entry);
+        mdb_read_columns (table);
+        MdbColumn *col;
+
+        for (i = 0; i < table->num_cols; i++) {
+          col = static_cast<MdbColumn*>(g_ptr_array_index (table->columns, i));
+          var_names.push_back(col->name);
+        };
+      };
+    };
+
+    return var_names;
+  };
+
 };
 
 
