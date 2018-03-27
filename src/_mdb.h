@@ -115,32 +115,18 @@ public:
 
   Rcpp::DataFrame getTableSchema(std::string table_name) {
 
-    MdbCatalogEntry * entry;
     CharacterVector col_names;
     CharacterVector col_types;
 
-    for (int i=0; i < this->mdb->num_catalog; i++) {
-      entry = static_cast<MdbCatalogEntry*>(g_ptr_array_index (mdb->catalog, i));
+    MdbTableDef *table = read_table_by_name(this->mdb, table_name, MDB_TABLE);
 
-      if (entry->object_name == table_name) {
+    mdb_read_columns (table);
+    MdbColumn *col;
 
-        MdbTableDef *table = mdb_read_table (entry);
-        mdb_read_columns (table);
-        MdbColumn *col;
-
-        for (int j = 0; j < table->num_cols; j++) {
-          col = static_cast<MdbColumn*>(g_ptr_array_index (table->columns, j));
-          col_names.push_back(col->name);
-          col_types.push_back(mdb_col_disp_type(col));
-        };
-
-        break; // leave loop if find a table with the right name
-      };
-
-      if (i == this->mdb->num_catalog - 1) {
-        Rcpp::stop("Didn't found table with the provided name.");
-      };
-
+    for (int j = 0; j < table->num_cols; j++) {
+      col = static_cast<MdbColumn*>(g_ptr_array_index (table->columns, j));
+      col_names.push_back(col->name);
+      col_types.push_back(mdb_col_disp_type(col));
     };
 
     return Rcpp::DataFrame::create(
