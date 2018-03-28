@@ -245,6 +245,7 @@ GPtrArray *mdb_read_columns(MdbTableDef *table)
 	/* printf("column %d\n", i);
 	mdb_buffer_dump(mdb->pg_buf, cur_pos, fmt->tab_col_entry_size); */
 #endif
+
 		read_pg_if_n(mdb, col, &cur_pos, fmt->tab_col_entry_size);
 		pcol = (MdbColumn *) g_malloc0(sizeof(MdbColumn));
 
@@ -296,6 +297,7 @@ GPtrArray *mdb_read_columns(MdbTableDef *table)
 	** column names - ordered the same as the column attributes table
 	*/
 	for (i=0;i<table->num_cols;i++) {
+
 		char *tmp_buf;
 		pcol = g_ptr_array_index(table->columns, i);
 
@@ -315,16 +317,16 @@ GPtrArray *mdb_read_columns(MdbTableDef *table)
 	g_ptr_array_sort(table->columns, (GCompareFunc)mdb_col_comparer);
 
 	allprops = table->entry->props;
+
 	if (allprops)
 		for (i=0;i<table->num_cols;i++) {
 			pcol = g_ptr_array_index(table->columns, i);
 			for (j=0; j<allprops->len; ++j) {
 				MdbProperties *props = g_array_index(allprops, MdbProperties*, j);
-				if (!strcmp(props->name, pcol->name)) {
+				if (props->name == pcol->name) {
 					pcol->props = props;
 					break;
 				}
-
 			}
 		}
 	table->index_start = cur_pos;

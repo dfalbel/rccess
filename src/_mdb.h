@@ -47,23 +47,23 @@ Rcpp::String mdb_col_disp_type (MdbColumn *col) {
     return "money";
     break;
   }
-  return NA_STRING;
-}
+  return "unknown";
+};
 
-MdbTableDef *read_table_by_name (MdbHandle *mdb, std::string table_name, int obj_type) {
-  unsigned int i;
+MdbTableDef *read_table_by_name (MdbHandle *mdb, std::string table_name) {
+
   MdbCatalogEntry *entry;
 
-  mdb_read_catalog(mdb, obj_type);
-
-  for (i=0; i<mdb->num_catalog; i++) {
+  for (int i=0; i<mdb->num_catalog; i++) {
     entry = static_cast<MdbCatalogEntry*>(g_ptr_array_index(mdb->catalog, i));
-    if (entry->object_name == table_name)
+    if (entry->object_name == table_name) {
       return mdb_read_table(entry);
+    };
   }
 
   Rcpp::stop("Didn't find a table with the provided name.");
-}
+  return NULL;
+};
 
 class Mdb {
 
@@ -82,7 +82,7 @@ public:
       Rcpp::stop("Couldn't open database.");
     };
 
-    if (!mdb_read_catalog (this->mdb, MDB_ANY)) {
+    if (!mdb_read_catalog (this->mdb, MDB_TABLE)) {
       Rcpp::stop("File does not appear to be an Access database");
     };
 
@@ -117,14 +117,16 @@ public:
 
     CharacterVector col_names;
     CharacterVector col_types;
+    MdbTableDef *table;
 
-    MdbTableDef *table = read_table_by_name(this->mdb, table_name, MDB_TABLE);
+    table = read_table_by_name(this->mdb, table_name);
 
     mdb_read_columns (table);
     MdbColumn *col;
 
     for (int j = 0; j < table->num_cols; j++) {
       col = static_cast<MdbColumn*>(g_ptr_array_index (table->columns, j));
+
       col_names.push_back(col->name);
       col_types.push_back(mdb_col_disp_type(col));
     };
@@ -138,7 +140,7 @@ public:
   Rcpp::DataFrame getTable (std::string table_name) {
 
     MdbTableDef *table;
-    table = read_table_by_name(this->mdb, table_name, MDB_TABLE);
+    table = read_table_by_name(this->mdb, table_name);
     mdb_read_columns(table);
     mdb_rewind_table(table);
 

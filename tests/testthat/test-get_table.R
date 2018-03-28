@@ -1,4 +1,4 @@
-context("get_table")
+context("get_table functions")
 
 test_that("get_table_names", {
 
@@ -8,7 +8,6 @@ test_that("get_table_names", {
   )
 
 })
-
 
 test_that("get_table_schema", {
 
