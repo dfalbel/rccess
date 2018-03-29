@@ -2,4 +2,4 @@ PKG_CPPFLAGS=-I/usr/local/Cellar/glib/2.56.0/include/glib-2.0 -I/usr/local/Cella
 PKG_LIBS=-L/usr/local/Cellar/glib/2.56.0/lib -L/usr/local/opt/gettext/lib -lglib-2.0 -lintl -Wl,-framework -Wl,CoreFoundation
 
 SOURCES = $(wildcard libmdb/*.c)
-OBJECTS = _mdb.o RcppExports.o $(SOURCES:.c=.o)
+OBJECTS = mdb.o RcppExports.o $(SOURCES:.c=.o)
