@@ -169,18 +169,25 @@ public:
     }
     out.attr("names") = out_names;
     out.attr("class") = "data.frame";
+    out.attr("row.names") = seq_len(table->num_rows);
 
     char *value;
     size_t length;
-    Rcout << "num_rows: " << table->num_rows << "\n";
+    int k = 0;
     while(mdb_fetch_row(table)) {
       for (int i=0; i < table->num_cols; i++) {
         col =  static_cast<MdbColumn*>(g_ptr_array_index(table->columns,i));
 
         value = bound_values[i];
         length = bound_lens[i];
-        Rcout << "column: " << (i + 1) << " of " << table->num_cols << " col_name: "<< col->name << " col_type: " << static_cast<std::string>(mdb_col_disp_type(col)) <<" value: "<< value << "\n";
+
+        Rcpp::RObject column = out[i];
+        Rcout << value << "\n";
+        //column[k] = value;
+
+        //Rcout << "column: " << (i + 1) << " of " << table->num_cols << " col_name: "<< col->name << " col_type: " << static_cast<std::string>(mdb_col_disp_type(col)) <<" value: "<< value << "\n";
       }
+      k++;
     }
 
     return out;
