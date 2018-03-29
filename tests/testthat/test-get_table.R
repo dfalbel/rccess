@@ -1,74 +1,24 @@
-context("get_table functions")
+context("get_table")
 
 path_mdb <- "../../inst/extdata/AgeRange.mdb"
 path_accdb <-"../../inst/extdata/Books2010.accdb"
 
-test_that("get_table_names errors", {
+test_that("get table for mdb files", {
 
-  expect_error(
-    rccess:::get_table_names(paste0(path_mdb, "wrongPath"))
-  )
+  x <- rccess:::get_table(path_mdb, "tblEmployees")
 
-  expect_error(
-    rccess:::get_table_names("DESCRIPTION")
-  )
+  expect_equal(ncol(x), 16)
+  expect_named(x)
+  expect_is(x, "data.frame")
 
 })
 
-test_that("get_table_names for mdb files", {
+test_that("get table for accdb files", {
 
-  expect_equal(
-    rccess:::get_table_names(path_mdb),
-    "tblEmployees"
-  )
+  x <- rccess:::get_table(path_accdb, "Employees")
 
-})
-
-test_that("get_table_names for accdb files", {
-
-  expect_is(
-    rccess:::get_table_names(path_accdb),
-    "character"
-  )
-
-  expect_length(
-    rccess:::get_table_names(path_accdb),
-    10L
-  )
-
-})
-
-test_that("get_table_schema errors", {
-
-  expect_error(
-    rccess:::get_table_schema(path_mdb, "wrongTableName")
-  )
-
-  expect_error(
-    rccess:::get_table_schema(path_accdb, "wrongTableName")
-  )
-
-})
-
-test_that("get_table_schema for mdb files", {
-
-  expect_is(
-    rccess:::get_table_schema(path_mdb, "tblEmployees"),
-    "data.frame"
-  )
-
-})
-
-test_that("get_table_schema for accdb files", {
-
-  expect_is(
-    rccess:::get_table_schema(path_accdb, "Employees"),
-    "data.frame"
-  )
-
-  expect_is(
-    rccess:::get_table_schema(path_accdb, "AllSex"),
-    "data.frame"
-  )
+  expect_equal(ncol(x), 8)
+  expect_named(x)
+  expect_is(x, "data.frame")
 
 })
