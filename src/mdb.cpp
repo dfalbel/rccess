@@ -1,5 +1,5 @@
 #include <Rcpp.h>
-#include "_mdb.h"
+#include "mdb.h"
 using namespace Rcpp;
 
 // [[Rcpp::export]]
