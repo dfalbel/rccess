@@ -147,6 +147,5 @@ public:
     return Rcpp::DataFrame::create();
   };
 
-
 };
 
