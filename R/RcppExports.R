@@ -9,3 +9,7 @@ get_table_schema <- function(path, table_name) {
     .Call(`_rccess_get_table_schema`, path, table_name)
 }
 
+get_table <- function(path, table_name) {
+    .Call(`_rccess_get_table`, path, table_name)
+}
+

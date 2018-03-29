@@ -1,5 +1,6 @@
 #include <Rcpp.h>
-#include <mdbtools.h>
+#include "mdbtools.h"
+#include "colSpec.h"
 using namespace Rcpp;
 
 
@@ -141,10 +142,48 @@ public:
 
     MdbTableDef *table;
     table = read_table_by_name(this->mdb, table_name);
+
     mdb_read_columns(table);
     mdb_rewind_table(table);
 
-    return Rcpp::DataFrame::create();
+    char **bound_values;
+    int  *bound_lens;
+
+    bound_values = (char **) g_malloc(table->num_cols * sizeof(char *));
+    bound_lens = (int *) g_malloc(table->num_cols * sizeof(int));
+
+    for (int i=0;i<table->num_cols;i++) {
+      /* bind columns */
+      bound_values[i] = (char *) g_malloc0(MDB_BIND_SIZE);
+      mdb_bind_column(table, i+1, bound_values[i], &bound_lens[i]);
+    }
+
+    // Initialize the List (will convert to data frame later)
+    Rcpp::List out(table->num_cols);
+    MdbColumn *col;
+    Rcpp::StringVector out_names(table->num_cols);
+    for (int j = 0; j < table->num_cols; j++) {
+      col =  static_cast<MdbColumn*>(g_ptr_array_index(table->columns,j));
+      out[j] = makeCol(col->col_type, table->num_rows);
+      out_names[j] = col->name;
+    }
+    out.attr("names") = out_names;
+    out.attr("class") = "data.frame";
+
+    char *value;
+    size_t length;
+    Rcout << "num_rows: " << table->num_rows << "\n";
+    while(mdb_fetch_row(table)) {
+      for (int i=0; i < table->num_cols; i++) {
+        col =  static_cast<MdbColumn*>(g_ptr_array_index(table->columns,i));
+
+        value = bound_values[i];
+        length = bound_lens[i];
+        Rcout << "column: " << (i + 1) << " of " << table->num_cols << " col_name: "<< col->name << " col_type: " << static_cast<std::string>(mdb_col_disp_type(col)) <<" value: "<< value << "\n";
+      }
+    }
+
+    return out;
   };
 
 };
