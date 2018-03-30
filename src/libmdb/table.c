@@ -22,7 +22,6 @@
 #include "dmalloc.h"
 #endif
 
-
 static gint mdb_col_comparer(MdbColumn **a, MdbColumn **b)
 {
 	if ((*a)->col_num > (*b)->col_num)
@@ -323,10 +322,12 @@ GPtrArray *mdb_read_columns(MdbTableDef *table)
 			pcol = g_ptr_array_index(table->columns, i);
 			for (j=0; j<allprops->len; ++j) {
 				MdbProperties *props = g_array_index(allprops, MdbProperties*, j);
-				if (props->name == pcol->name) {
-					pcol->props = props;
-					break;
-				}
+			  if(props->name) {
+			    if (strcmp(props->name, pcol->name) == 0) {
+			      pcol->props = props;
+			      break;
+			    }
+			  }
 			}
 		}
 	table->index_start = cur_pos;

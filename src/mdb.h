@@ -187,6 +187,10 @@ public:
           column[j] = std::stoi(value);
           break;
         };
+        case MDB_BYTE: {
+          Rcpp::CharacterVector column = out[i];
+          column[j] = value;
+        };
         case MDB_INT: {
           Rcpp::IntegerVector column = out[i];
           column[j] = std::stol(value);
@@ -202,7 +206,7 @@ public:
           }
           break;
         };
-        case MDB_TEXT: {
+        case MDB_COMPLEX: {
           Rcpp::CharacterVector column = out[i];
           column[j] = value;
           break;
@@ -211,8 +215,33 @@ public:
           //Rcout << std::string(mdb_col_disp_type(col)) << (col->col_type) << " - "<< MDB_FLOAT <<"\n";
           Rcpp::NumericVector column = out[i];
           column[j] = std::stod(value);
+          break;
         };
-
+        case MDB_DOUBLE: {
+          Rcpp::NumericVector column = out[i];
+          column[j] = std::stold(value);
+          break;
+        };
+        case MDB_TEXT: {
+          Rcpp::CharacterVector column = out[i];
+          column[j] = value;
+          break;
+        };
+        case MDB_OLE: {
+          Rcpp::CharacterVector column = out[i];
+          column[j] = value;
+          break;
+        };
+        case MDB_MEMO: {
+          Rcpp::CharacterVector column = out[i];
+          column[j] = value;
+          break;
+        };
+        case MDB_MONEY: {
+          Rcpp::CharacterVector column = out[i];
+          column[j] = value;
+          break;
+        };
         };
 
         //Rcout << value << "\n";
