@@ -173,21 +173,54 @@ public:
 
     char *value;
     size_t length;
-    int k = 0;
+    int j = 0;
     while(mdb_fetch_row(table)) {
       for (int i=0; i < table->num_cols; i++) {
         col =  static_cast<MdbColumn*>(g_ptr_array_index(table->columns,i));
-
         value = bound_values[i];
         length = bound_lens[i];
 
-        Rcpp::RObject column = out[i];
-        Rcout << value << "\n";
+        switch(col->col_type) {
+
+        case MDB_BOOL: {
+          Rcpp::LogicalVector column = out[i];
+          column[j] = std::stoi(value);
+          break;
+        };
+        case MDB_INT: {
+          Rcpp::IntegerVector column = out[i];
+          column[j] = std::stol(value);
+          break;
+        };
+        case MDB_LONGINT: {
+          Rcpp::IntegerVector column = out[i];
+          std::string empty = "";
+          if (!empty.compare(value)) {
+            column[j] = NA_INTEGER;
+          } else {
+            column[j] = std::stoll(value);
+          }
+          break;
+        };
+        case MDB_TEXT: {
+          Rcpp::CharacterVector column = out[i];
+          column[j] = value;
+          break;
+        };
+        case MDB_FLOAT: {
+          //Rcout << std::string(mdb_col_disp_type(col)) << (col->col_type) << " - "<< MDB_FLOAT <<"\n";
+          Rcpp::NumericVector column = out[i];
+          column[j] = std::stod(value);
+        };
+
+        };
+
+        //Rcout << value << "\n";
         //column[k] = value;
 
         //Rcout << "column: " << (i + 1) << " of " << table->num_cols << " col_name: "<< col->name << " col_type: " << static_cast<std::string>(mdb_col_disp_type(col)) <<" value: "<< value << "\n";
       }
-      k++;
+      j++;
     }
 
     return out;
