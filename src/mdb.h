@@ -6,13 +6,13 @@ using namespace Rcpp;
 
 // copied from
 // https://github.com/tidyverse/readxl/blob/62cc348473939ddedb9c85fe678a583f8a0d9b14/src/XlsWorkBook.h#L9
-inline std::string normalizePath(std::string path) {
+std::string normalizePath(const std::string path) {
   Rcpp::Environment baseEnv = Rcpp::Environment::base_env();
   Rcpp::Function normalizePath = baseEnv["normalizePath"];
   return Rcpp::as<std::string>(normalizePath(path, "/", true));
 };
 
-Rcpp::String mdb_col_disp_type (MdbColumn *col) {
+Rcpp::String mdb_col_disp_type (const MdbColumn *col) {
   switch (col->col_type) {
   case MDB_BOOL:
     return "bool";
@@ -51,7 +51,7 @@ Rcpp::String mdb_col_disp_type (MdbColumn *col) {
   return "unknown";
 };
 
-MdbTableDef *read_table_by_name (MdbHandle *mdb, std::string table_name) {
+MdbTableDef *read_table_by_name (MdbHandle *mdb, const std::string table_name) {
 
   MdbCatalogEntry *entry;
 
@@ -95,7 +95,7 @@ public:
   };
 
   // get included table names
-  CharacterVector getTableNames () {
+  Rcpp::CharacterVector getTableNames () {
 
     MdbCatalogEntry * entry;
     CharacterVector table_names;
@@ -175,6 +175,7 @@ public:
     size_t length;
     int j = 0;
     while(mdb_fetch_row(table)) {
+
       for (int i=0; i < table->num_cols; i++) {
         col =  static_cast<MdbColumn*>(g_ptr_array_index(table->columns,i));
         value = bound_values[i];
@@ -212,7 +213,6 @@ public:
           break;
         };
         case MDB_FLOAT: {
-          //Rcout << std::string(mdb_col_disp_type(col)) << (col->col_type) << " - "<< MDB_FLOAT <<"\n";
           Rcpp::NumericVector column = out[i];
           column[j] = std::stod(value);
           break;
@@ -238,6 +238,11 @@ public:
           break;
         };
         case MDB_MONEY: {
+          Rcpp::CharacterVector column = out[i];
+          column[j] = value;
+          break;
+        };
+        case MDB_DATETIME: {
           Rcpp::CharacterVector column = out[i];
           column[j] = value;
           break;
