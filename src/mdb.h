@@ -164,14 +164,15 @@ public:
     Rcpp::StringVector out_names(table->num_cols);
     for (int j = 0; j < table->num_cols; j++) {
       col =  static_cast<MdbColumn*>(g_ptr_array_index(table->columns,j));
-      out[j] = makeCol(col->col_type, table->num_rows);
+      ColType type = mdbType2colType(col->col_type);
+      out[j] = makeCol(type, table->num_rows);
       out_names[j] = col->name;
     }
     out.attr("names") = out_names;
     out.attr("class") = "data.frame";
     out.attr("row.names") = seq_len(table->num_rows);
 
-    char *value;
+    std::string value;
     size_t length;
     int j = 0;
     while(mdb_fetch_row(table)) {
@@ -180,72 +181,40 @@ public:
         col =  static_cast<MdbColumn*>(g_ptr_array_index(table->columns,i));
         value = bound_values[i];
         length = bound_lens[i];
+        ColType type = mdbType2colType(col->col_type);
 
-        switch(col->col_type) {
+        switch(type) {
 
-        case MDB_BOOL: {
+        case COL_DATE: {
+          // we are still treating dates as strings
+          Rcpp::CharacterVector column = out[i];
+          column[j] = value;
+          break;
+        };
+        case COL_LOGICAL: {
           Rcpp::LogicalVector column = out[i];
           column[j] = std::stoi(value);
           break;
         };
-        case MDB_BYTE: {
-          Rcpp::CharacterVector column = out[i];
-          column[j] = value;
-        };
-        case MDB_INT: {
-          Rcpp::IntegerVector column = out[i];
-          column[j] = std::stol(value);
-          break;
-        };
-        case MDB_LONGINT: {
-          Rcpp::IntegerVector column = out[i];
-          std::string empty = "";
-          if (!empty.compare(value)) {
-            column[j] = NA_INTEGER;
+        case COL_NUMERIC: {
+          Rcpp::NumericVector column = out[i];
+          if (value.length() > 0){
+            column[j] = std::stold(value);
           } else {
-            column[j] = std::stoll(value);
+            column[j] = NA_REAL;
           }
           break;
         };
-        case MDB_COMPLEX: {
+        case COL_SKIP: {
+          // skiping column
+        };
+        case COL_TEXT: {
           Rcpp::CharacterVector column = out[i];
           column[j] = value;
           break;
         };
-        case MDB_FLOAT: {
-          Rcpp::NumericVector column = out[i];
-          column[j] = std::stod(value);
-          break;
-        };
-        case MDB_DOUBLE: {
-          Rcpp::NumericVector column = out[i];
-          column[j] = std::stold(value);
-          break;
-        };
-        case MDB_TEXT: {
-          Rcpp::CharacterVector column = out[i];
-          column[j] = value;
-          break;
-        };
-        case MDB_OLE: {
-          Rcpp::CharacterVector column = out[i];
-          column[j] = value;
-          break;
-        };
-        case MDB_MEMO: {
-          Rcpp::CharacterVector column = out[i];
-          column[j] = value;
-          break;
-        };
-        case MDB_MONEY: {
-          Rcpp::CharacterVector column = out[i];
-          column[j] = value;
-          break;
-        };
-        case MDB_DATETIME: {
-          Rcpp::CharacterVector column = out[i];
-          column[j] = value;
-          break;
+        case COL_UNKNOWN: {
+          // unknown column
         };
         };
 
