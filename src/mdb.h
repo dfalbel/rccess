@@ -138,7 +138,7 @@ public:
     );
   };
 
-  Rcpp::DataFrame getTable (std::string table_name) {
+  Rcpp::DataFrame getTable (std::string table_name, int n_max) {
 
     MdbTableDef *table;
     table = read_table_by_name(this->mdb, table_name);
@@ -158,6 +158,13 @@ public:
       mdb_bind_column(table, i+1, bound_values[i], &bound_lens[i]);
     }
 
+    int n_rows;
+    if (n_max < 0 | n_max > table->num_rows) {
+      n_rows = table->num_rows;
+    } else {
+      n_rows = n_max;
+    }
+
     // Initialize the List (will convert to data frame later)
     Rcpp::List out(table->num_cols);
     MdbColumn *col;
@@ -165,12 +172,12 @@ public:
     for (int j = 0; j < table->num_cols; j++) {
       col =  static_cast<MdbColumn*>(g_ptr_array_index(table->columns,j));
       ColType type = mdbType2colType(col->col_type);
-      out[j] = makeCol(type, table->num_rows);
+      out[j] = makeCol(type, n_rows);
       out_names[j] = col->name;
     }
     out.attr("names") = out_names;
     out.attr("class") = "data.frame";
-    out.attr("row.names") = seq_len(table->num_rows);
+    out.attr("row.names") = seq_len(n_rows);
 
     std::string value;
     size_t length;
@@ -188,12 +195,20 @@ public:
         case COL_DATE: {
           // we are still treating dates as strings
           Rcpp::CharacterVector column = out[i];
-          column[j] = value;
+          if (value.length() > 0){
+            column[j] = value;
+          } else {
+            column[j] = NA_STRING;
+          }
           break;
         };
         case COL_LOGICAL: {
           Rcpp::LogicalVector column = out[i];
-          column[j] = std::stoi(value);
+          if (value.length() > 0){
+            column[j] = std::stoi(value);
+          } else {
+            column[j] = NA_LOGICAL;
+          }
           break;
         };
         case COL_NUMERIC: {
@@ -206,23 +221,29 @@ public:
           break;
         };
         case COL_SKIP: {
+          break;
           // skiping column
         };
         case COL_TEXT: {
           Rcpp::CharacterVector column = out[i];
-          column[j] = value;
+          if (value.length() > 0){
+            column[j] = value;
+          } else {
+            column[j] = NA_STRING;
+          }
           break;
         };
         case COL_UNKNOWN: {
+          break;
           // unknown column
         };
         };
+      };
 
-        //Rcout << value << "\n";
-        //column[k] = value;
-
-        //Rcout << "column: " << (i + 1) << " of " << table->num_cols << " col_name: "<< col->name << " col_type: " << static_cast<std::string>(mdb_col_disp_type(col)) <<" value: "<< value << "\n";
+      if (j >= (n_rows - 1)) {
+        break;
       }
+
       j++;
     }
 

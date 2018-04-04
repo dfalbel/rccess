@@ -29,14 +29,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_table
-Rcpp::DataFrame get_table(std::string path, std::string table_name);
-RcppExport SEXP _rccess_get_table(SEXP pathSEXP, SEXP table_nameSEXP) {
+Rcpp::DataFrame get_table(std::string path, std::string table_name, int n_max);
+RcppExport SEXP _rccess_get_table(SEXP pathSEXP, SEXP table_nameSEXP, SEXP n_maxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
     Rcpp::traits::input_parameter< std::string >::type table_name(table_nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_table(path, table_name));
+    Rcpp::traits::input_parameter< int >::type n_max(n_maxSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_table(path, table_name, n_max));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -44,7 +45,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_rccess_get_table_names", (DL_FUNC) &_rccess_get_table_names, 1},
     {"_rccess_get_table_schema", (DL_FUNC) &_rccess_get_table_schema, 2},
-    {"_rccess_get_table", (DL_FUNC) &_rccess_get_table, 2},
+    {"_rccess_get_table", (DL_FUNC) &_rccess_get_table, 3},
     {NULL, NULL, 0}
 };
 
