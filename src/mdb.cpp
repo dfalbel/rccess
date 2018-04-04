@@ -17,9 +17,9 @@ Rcpp::DataFrame get_table_schema (std::string path, std::string table_name) {
 }
 
 // [[Rcpp::export]]
-Rcpp::DataFrame get_table (std::string path, std::string table_name) {
+Rcpp::DataFrame get_table (std::string path, std::string table_name, int n_max = -1) {
   Mdb m(path);
 
-  return m.getTable(table_name);
+  return m.getTable(table_name, n_max);
 }
 

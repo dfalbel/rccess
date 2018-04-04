@@ -36,7 +36,7 @@ ColType mdbType2colType (int mdb_type) {
   case MDB_BINARY: return COL_UNKNOWN;
   case MDB_TEXT: return COL_TEXT;
   case MDB_OLE: return COL_UNKNOWN;
-  case MDB_MEMO: return COL_UNKNOWN;
+  case MDB_MEMO: return COL_TEXT;
   case MDB_REPID: return COL_UNKNOWN;
   case MDB_NUMERIC: return COL_NUMERIC;
   case MDB_COMPLEX: return COL_UNKNOWN;
