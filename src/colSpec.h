@@ -1,5 +1,5 @@
 #include <Rcpp.h>
-#include "mdbtools.h"
+#include "libmdb/mdbtools.h"
 
 enum ColType {
   COL_UNKNOWN, // implies column type needs to be guessed

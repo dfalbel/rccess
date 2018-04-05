@@ -1,6 +1,6 @@
 #include <Rcpp.h>
 #include <glib.h>
-#include "mdbtools.h"
+#include "libmdb/mdbtools.h"
 #include "colSpec.h"
 using namespace Rcpp;
 
