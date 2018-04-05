@@ -5,6 +5,14 @@ latex: false
 fortran: false
 warnings_are_errors: false
 
+os:
+  - linux
+  - osx
+
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update          ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install glib    ; fi
+
 addons:
   apt:
     packages:
