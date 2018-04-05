@@ -1,5 +1,11 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
-
 language: R
-sudo: false
 cache: packages
+latex: false
+fortran: false
+warnings_are_errors: false
+
+addons:
+  apt:
+    packages:
+    - libglib2.0-dev

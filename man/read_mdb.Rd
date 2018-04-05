@@ -4,7 +4,7 @@
 \alias{read_mdb}
 \title{Read MDB files}
 \usage{
-read_mdb(path, table_name = NULL, n_max = Inf)
+read_mdb(path, table_name = NULL, n_max = -1)
 }
 \arguments{
 \item{path}{Path to the mdb/accdb file.}
@@ -12,7 +12,8 @@ read_mdb(path, table_name = NULL, n_max = Inf)
 \item{table_name}{Table to read. A string with the name of table to read. If
 NULL, defaults to the first table.}
 
-\item{n_max}{Maximum numbers of data rows to read.}
+\item{n_max}{Maximum numbers of data rows to read. Use any negative number to read
+all rows.}
 }
 \description{
 Read MDB files

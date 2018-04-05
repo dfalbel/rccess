@@ -1,7 +1,7 @@
 context("get_table")
 
-path_mdb <- "../../inst/extdata/AgeRange.mdb"
-path_accdb <-"../../inst/extdata/Books2010.accdb"
+path_mdb <- test_mdb("AgeRange.mdb")
+path_accdb <- test_mdb("Books2010.accdb")
 
 test_that("get table for mdb files", {
 
