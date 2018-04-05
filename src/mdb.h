@@ -1,5 +1,5 @@
 #include <Rcpp.h>
-#include <gllib.h>
+#include <glib.h>
 #include "mdbtools.h"
 #include "colSpec.h"
 using namespace Rcpp;
