@@ -3,7 +3,7 @@ language: R
 cache: packages
 latex: false
 fortran: false
-warnings_are_errors: true
+warnings_are_errors: false
 
 addons:
   apt:
