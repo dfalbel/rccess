@@ -57,3 +57,12 @@ test_that("read accdb files with no table name specified", {
   expect_is(x, "data.frame")
 
 })
+
+test_that("reading more files", {
+  files <- dir(rprojroot::find_testthat_root_file("mdb"), full.names = TRUE)
+  all_df <- lapply(files, read_mdb)
+
+  expect_true(all(sapply(all_df, class) == "data.frame"))
+})
+
+
