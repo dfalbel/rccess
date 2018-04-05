@@ -54,7 +54,7 @@ CPPFLAGS=`${R_HOME}/bin/R CMD config CPPFLAGS`
 echo "Using PKG_CFLAGS=$PKG_CFLAGS"
 
 # Test configuration
-${CC} ${CPPFLAGS} ${PKG_CFLAGS} ${CFLAGS} -E ${PKG_TEST_FILE} >/dev/null 2>&1
+# ${CC} ${CPPFLAGS} ${PKG_CFLAGS} ${CFLAGS} -E ${PKG_TEST_FILE} >/dev/null 2>&1
 
 # Customize the error
 if [ $? -ne 0 ]; then
