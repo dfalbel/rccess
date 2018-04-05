@@ -1,5 +1,6 @@
 PKG_CPPFLAGS=@cflags@
 PKG_LIBS=@libs@
+CXX_STD = CXX11
 
 SOURCES = $(wildcard libmdb/*.c)
 OBJECTS = mdb.o RcppExports.o $(SOURCES:.c=.o)

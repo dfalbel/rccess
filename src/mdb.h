@@ -206,7 +206,7 @@ public:
         case COL_LOGICAL: {
           Rcpp::LogicalVector column = out[i];
           if (value.length() > 0){
-            column[j] = stoi(value);
+            column[j] = std::stoi(value);
           } else {
             column[j] = NA_LOGICAL;
           }
@@ -215,7 +215,7 @@ public:
         case COL_NUMERIC: {
           Rcpp::NumericVector column = out[i];
           if (value.length() > 0){
-            column[j] = stold(value);
+            column[j] = std::stold(value);
           } else {
             column[j] = NA_REAL;
           }
