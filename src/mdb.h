@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include <gllib.h>
 #include "mdbtools.h"
 #include "colSpec.h"
 using namespace Rcpp;
@@ -205,7 +206,7 @@ public:
         case COL_LOGICAL: {
           Rcpp::LogicalVector column = out[i];
           if (value.length() > 0){
-            column[j] = std::stoi(value);
+            column[j] = stoi(value);
           } else {
             column[j] = NA_LOGICAL;
           }
@@ -214,7 +215,7 @@ public:
         case COL_NUMERIC: {
           Rcpp::NumericVector column = out[i];
           if (value.length() > 0){
-            column[j] = std::stold(value);
+            column[j] = stold(value);
           } else {
             column[j] = NA_REAL;
           }
