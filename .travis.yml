@@ -17,3 +17,6 @@ addons:
   apt:
     packages:
     - libglib2.0-dev
+
+after_success:
+  - Rscript -e 'covr::codecov()'

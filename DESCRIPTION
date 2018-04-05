@@ -14,6 +14,7 @@ LinkingTo:
 Imports:
     Rcpp
 RoxygenNote: 6.0.1
-Suggests: 
+Suggests:
     testthat,
-    rprojroot
+    rprojroot,
+    covr
