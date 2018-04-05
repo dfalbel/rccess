@@ -2,10 +2,13 @@ PKG_CPPFLAGS=@cflags@
 PKG_LIBS=@libs@
 CXX_STD = CXX11
 
-SOURCES = $(wildcard libmdb/*.c)
-OBJECTS = mdb.o RcppExports.o $(SOURCES:.c=.o)
-
-all: clean
-
-clean:
-	rm -f $(OBJECTS) $(SHLIB)
+SOURCES = libmdb/backend.c libmdb/catalog.c libmdb/data.c libmdb/dump.c \
+					libmdb/file.c libmdb/iconv.c libmdb/index.c libmdb/like.c \
+					libmdb/map.c libmdb/mem.c libmdb/money.c libmdb/options.c \
+					libmdb/props.c libmdb/sargs.c libmdb/stats.c libmdb/table.c \
+					libmdb/worktable.c libmdb/write.c
+OBJECTS = mdb.o RcppExports.o libmdb/backend.o libmdb/catalog.o libmdb/data.o \
+					libmdb/dump.o libmdb/file.o libmdb/iconv.o libmdb/index.o \
+					libmdb/like.o libmdb/map.o libmdb/mem.o libmdb/money.o \
+					libmdb/options.o libmdb/props.o libmdb/sargs.o libmdb/stats.o \
+					libmdb/table.o libmdb/worktable.o libmdb/write.o
