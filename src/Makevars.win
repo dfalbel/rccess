@@ -1,0 +1,17 @@
+all: clean winlibs
+
+winlibs: clean
+	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/winlibs.R"
+
+clean:
+	rm -f $(SHLIB) $(OBJECTS)
+
+PKG_CPPFLAGS= \
+	-I../windows/rsvg-2.40.16/include/glib-2.0 \
+	-I../windows/rsvg-2.40.16/lib${R_ARCH}/glib-2.0/include \
+
+PKG_LIBS= \
+	-L../windows/rsvg-2.40.16/lib${R_ARCH} \
+	-lgio-2.0 -lgobject-2.0 -lgmodule-2.0 -lglib-2.0 -lintl
+
+CXX_STD = CXX11
