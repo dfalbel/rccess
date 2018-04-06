@@ -1,7 +1,9 @@
 # rccess
 
 [![Travis-CI Build Status](https://travis-ci.org/dfalbel/rccess.svg?branch=master)](https://travis-ci.org/dfalbel/rccess)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/dfalbel/rccess?branch=master&svg=true)](https://ci.appveyor.com/project/dfalbel/rccess)
 [![Coverage Status](https://img.shields.io/codecov/c/github/dfalbel/rccess/master.svg)](https://codecov.io/github/dfalbel/rccess?branch=master)
+
 
 The goal of rccess is to ...
 
